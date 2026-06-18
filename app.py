@@ -5,7 +5,7 @@ import os
 
 DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "harcamalar.db")
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
 def get_db():
     conn = sqlite3.connect(DB)
