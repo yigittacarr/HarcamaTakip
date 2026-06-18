@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Harcama Takip</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --accent: #6c63ff;
+      --accent-soft: rgba(108,99,255,0.15);
+      --text: #e8e9f0;
+      --muted: #7b7f9e;
+      --danger: #ff5c5c;
+      --green: #3ecf8e;
+      --border: rgba(255,255,255,0.07);
+      --radius: 14px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 680px; margin: 0 auto; }
+
+    /* Header */
+    .header { margin-bottom: 2rem; }
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .header h1 span { color: var(--accent); }
+    .header p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+    /* Toplam kart */
+    .toplam-kart {
+      background: linear-gradient(135deg, var(--accent) 0%, #9b59f7 100%);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .toplam-kart .label { font-size: 0.85rem; opacity: 0.85; font-weight: 500; }
+    .toplam-kart .tutar { font-size: 2rem; font-weight: 700; letter-spacing: -0.04em; }
+    .toplam-kart .icon { font-size: 2.5rem; opacity: 0.4; }
+
+    /* Form */
+    .form-kart {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-kart h2 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 5px; font-weight: 500; }
+
+    input, select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.65rem 0.9rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    select option { background: var(--surface2); }
+
+    .btn-ekle {
+      width: 100%;
+      margin-top: 0.75rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      font-family: inherit;
+    }
+    .btn-ekle:hover { opacity: 0.9; }
+    .btn-ekle:active { transform: scale(0.98); }
+
+    /* Liste */
+    .liste-baslik {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .bos {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .bos-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+    .harcama-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: border-color 0.2s;
+    }
+    .harcama-item:hover { border-color: rgba(108,99,255,0.3); }
+
+    .kategori-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .info { flex: 1; min-width: 0; }
+    .info .baslik { font-size: 0.95rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .info .meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+    .harcama-tutar {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--green);
+      white-space: nowrap;
+    }
+
+    .sil-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+      line-height: 1;
+    }
+    .sil-btn:hover { color: var(--danger); background: rgba(255,92,92,0.1); }
+
+    /* Kategori renkleri */
+    .kat-yemek     { background: #ff9f43; }
+    .kat-ulasim    { background: #54a0ff; }
+    .kat-fatura    { background: #ff6b6b; }
+    .kat-alisveris { background: #a29bfe; }
+    .kat-saglik    { background: #00d2d3; }
+    .kat-eglence   { background: #ffeaa7; }
+    .kat-diger     { background: #636e72; }
+
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .full { grid-column: 1; }
+      .toplam-kart .tutar { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Harcama <span>Takip</span></h1>
+    <p>Harcamalarını kolayca kaydet ve takip et.</p>
+  </div>
+
+  <div class="toplam-kart">
+    <div>
+      <div class="label">Toplam Harcama</div>
+      <div class="tutar">{{ "%.2f"|format(toplam) }} ₺</div>
+    </div>
+    <div class="icon">💸</div>
+  </div>
+
+  <div class="form-kart">
+    <h2>Yeni Harcama Ekle</h2>
+    <form action="/ekle" method="POST">
+      <div class="form-grid">
+        <div class="full">
+          <label>Başlık</label>
+          <input type="text" name="baslik" placeholder="Örn: Market alışverişi" required />
+        </div>
+        <div>
+          <label>Tutar (₺)</label>
+          <input type="number" name="tutar" placeholder="0.00" step="0.01" min="0" required />
+        </div>
+        <div>
+          <label>Tarih</label>
+          <input type="date" name="tarih" />
+        </div>
+        <div class="full">
+          <label>Kategori</label>
+          <select name="kategori">
+            <option value="yemek">🍔 Yemek</option>
+            <option value="ulasim">🚌 Ulaşım</option>
+            <option value="fatura">💡 Fatura</option>
+            <option value="alisveris">🛍 Alışveriş</option>
+            <option value="saglik">💊 Sağlık</option>
+            <option value="eglence">🎮 Eğlence</option>
+            <option value="diger">📦 Diğer</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn-ekle">+ Harcama Ekle</button>
+    </form>
+  </div>
+
+  <div class="liste-baslik">Son Harcamalar</div>
+
+  {% if harcamalar %}
+    {% for h in harcamalar %}
+    <div class="harcama-item">
+      <div class="kategori-dot kat-{{ h.kategori }}"></div>
+      <div class="info">
+        <div class="baslik">{{ h.baslik }}</div>
+        <div class="meta">{{ h.kategori|capitalize }} · {{ h.tarih }}</div>
+      </div>
+      <div class="harcama-tutar">{{ "%.2f"|format(h.tutar) }} ₺</div>
+      <a href="/sil/{{ h.id }}" class="sil-btn" onclick="return confirm('Silinsin mi?')">✕</a>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="bos">
+      <div class="bos-icon">🧾</div>
+      Henüz harcama yok. Yukarıdan ekleyebilirsin.
+    </div>
+  {% endif %}
+
+</div>
+</body>
+</html>
