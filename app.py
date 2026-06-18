@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 from datetime import datetime
+import os
+
+DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "harcamalar.db")
 
 app = Flask(__name__)
-DB = "harcamalar.db"
 
 def get_db():
     conn = sqlite3.connect(DB)
@@ -52,6 +54,8 @@ def sil(id):
         conn.execute("DELETE FROM harcamalar WHERE id = ?", (id,))
     return redirect(url_for("index"))
 
+
+
+init_db()
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)
